@@ -1,4 +1,4 @@
-# Juicy Dumplings Website (Rails 8)
+# Juicy Dumplings Website (Rails 8) 
 
 Modern restaurant website for **Juicy Dumplings (Doncaster East, VIC)** with:
 
