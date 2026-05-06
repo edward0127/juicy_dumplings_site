@@ -5,7 +5,7 @@ SERVER="${SERVER:-root@amituofo.com.au}"
 REMOTE_DIR="${REMOTE_DIR:-/var/juicy_dumplings_site}"
 IMAGE="${IMAGE:-ghcr.io/edward0127/juicy_dumplings_site}"
 PLATFORM="${PLATFORM:-linux/amd64}"
-HEALTHCHECK_URL="${HEALTHCHECK_URL:-https://juicydumplings.tudouke.com/up}"
+HEALTHCHECK_URL="${HEALTHCHECK_URL:-http://127.0.0.1:3013/up}"
 PUSH_GIT="${PUSH_GIT:-true}"
 SSH_KEY="${SSH_KEY:-}"
 AUTO_COMMIT_MESSAGE=""
@@ -24,7 +24,7 @@ Options:
   --remote-dir /path             Remote repo path (default: /var/juicy_dumplings_site).
   --image ghcr.io/org/repo       Image repository (default: ghcr.io/edward0127/juicy_dumplings_site).
   --platform linux/amd64         Buildx platform (default: linux/amd64).
-  --healthcheck-url https://...  Healthcheck URL (default: https://juicydumplings.tudouke.com/up).
+  --healthcheck-url URL          Healthcheck URL (default: http://127.0.0.1:3013/up).
   --ssh-key /path/to/key         SSH private key path.
   -h, --help                     Show this help.
 

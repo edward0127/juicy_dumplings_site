@@ -30,7 +30,7 @@ Environment overrides:
 
   GIT_PULL=1                    # run git pull before deploy
   RUN_MIGRATIONS=0              # skip db:migrate
-  HEALTHCHECK_URL=https://juicydumplings.tudouke.com/up
+  HEALTHCHECK_URL=http://127.0.0.1:3013/up
 EOF
 }
 
