@@ -7,7 +7,7 @@ APP_SERVICE="${APP_SERVICE:-web}"
 # Defaults: safe for "always works" deployments
 GIT_PULL="${GIT_PULL:-0}"                  # 1 to run git pull
 RUN_MIGRATIONS="${RUN_MIGRATIONS:-1}"      # 1 to run db:migrate
-HEALTHCHECK_URL="${HEALTHCHECK_URL:-}"     # e.g. https://juicydumplines.tudouke.com/up
+HEALTHCHECK_URL="${HEALTHCHECK_URL:-}"     # e.g. https://juicydumplings.tudouke.com/up
 CONTAINER_NAME="${CONTAINER_NAME:-juicy_dumplings_site}"  # matches your compose container_name
 
 usage() {
@@ -30,7 +30,7 @@ Environment overrides:
 
   GIT_PULL=1                    # run git pull before deploy
   RUN_MIGRATIONS=0              # skip db:migrate
-  HEALTHCHECK_URL=https://juicydumplines.tudouke.com/up
+  HEALTHCHECK_URL=https://juicydumplings.tudouke.com/up
 EOF
 }
 
