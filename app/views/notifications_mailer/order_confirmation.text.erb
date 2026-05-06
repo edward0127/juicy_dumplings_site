@@ -1,0 +1,4 @@
+Thanks for your order, <%= @order.customer_name %>!
+Order reference: <%= @order.public_id %>
+Total: <%= number_to_currency(@order.total_cents / 100.0) %>
+Pickup time: <%= @order.pickup_time&.strftime("%d %b %Y %I:%M %p") || "TBC" %>

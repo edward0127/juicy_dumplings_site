@@ -1,0 +1,41 @@
+<div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+  <div>
+    <p class="eyebrow">Booking Detail</p>
+    <h1 class="text-4xl text-neutral-950">Booking #<%= @booking.id %></h1>
+    <p class="mt-2 text-sm text-neutral-600"><%= @booking.booking_time.strftime("%d %b %Y %I:%M %p") %></p>
+  </div>
+  <%= link_to "Back to Bookings", admin_bookings_path, class: "btn-secondary self-start md:self-auto" %>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+  <div class="admin-card p-6">
+    <div class="grid gap-4 text-sm sm:grid-cols-2">
+      <div class="admin-muted-panel"><span class="font-black text-neutral-950">Name:</span> <%= @booking.name %></div>
+      <div class="admin-muted-panel"><span class="font-black text-neutral-950">Party Size:</span> <%= @booking.party_size %></div>
+      <div class="admin-muted-panel"><span class="font-black text-neutral-950">Phone:</span> <%= @booking.phone.presence || "Not provided" %></div>
+      <div class="admin-muted-panel"><span class="font-black text-neutral-950">Email:</span> <%= @booking.email.presence || "Not provided" %></div>
+      <div class="admin-muted-panel"><span class="font-black text-neutral-950">Time:</span> <%= @booking.booking_time.strftime("%d %b %Y %I:%M %p") %></div>
+      <div class="admin-muted-panel"><span class="font-black text-neutral-950">Status:</span> <%= @booking.status.humanize %></div>
+    </div>
+
+    <% if @booking.notes.present? %>
+      <div class="mt-5 rounded-lg border border-[#e6ded0] p-4">
+        <p class="admin-label">Guest Notes</p>
+        <div class="mt-2 text-sm text-neutral-700"><%= simple_format(@booking.notes) %></div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="admin-card p-6">
+    <p class="admin-label">Reservation Status</p>
+    <div class="mt-2"><%= booking_status_badge(@booking.status) %></div>
+
+    <%= form_with model: [:admin, @booking], class: "mt-5 space-y-4" do |f| %>
+      <div>
+        <%= f.label :status, class: "admin-label" %>
+        <%= f.select :status, Booking.statuses.keys.map { |status| [status.humanize, status] }, {}, class: "admin-input" %>
+      </div>
+      <%= f.submit "Save Booking", class: "btn-primary w-full justify-center" %>
+    <% end %>
+  </div>
+</div>

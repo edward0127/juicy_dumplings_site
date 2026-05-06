@@ -1,0 +1,6 @@
+<%= link_to order_path, id: "cart_badge", class: "relative inline-flex h-11 w-14 items-center justify-center rounded-full border border-[#e6d7bd] bg-white text-neutral-950 shadow-sm" do %>
+  <span class="text-xs font-extrabold uppercase">Cart</span>
+  <% if cart.count.positive? %>
+    <span class="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[#f4c84a] px-1 text-xs font-black text-neutral-950"><%= cart.count %></span>
+  <% end %>
+<% end %>

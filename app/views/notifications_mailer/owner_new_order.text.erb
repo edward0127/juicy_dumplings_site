@@ -1,0 +1,4 @@
+New Order: <%= @order.public_id %>
+Customer: <%= @order.customer_name %>
+Total: <%= number_to_currency(@order.total_cents / 100.0) %>
+Type: <%= @order.order_type.humanize %>

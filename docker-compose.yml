@@ -1,0 +1,18 @@
+services:
+  web:
+    image: ghcr.io/edward0127/juicy_dumplings_site:latest
+    security_opt:
+      - seccomp=unconfined
+    container_name: juicy_dumplings_site
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT_BIND:-3013}:80"
+    env_file:
+      - .env.prod
+    volumes:
+      - juicy_storage:/rails/storage
+      - juicy_db:/data
+
+volumes:
+  juicy_storage:
+  juicy_db:

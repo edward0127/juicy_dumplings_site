@@ -1,0 +1,85 @@
+<div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+  <div>
+    <p class="eyebrow">Today</p>
+    <h1 class="text-4xl text-neutral-950">Service Dashboard</h1>
+    <p class="mt-2 text-sm text-neutral-600">Quick view of orders, bookings, and menu operations for the restaurant.</p>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <%= link_to "Manage Menu", admin_menu_items_path, class: "btn-secondary" %>
+    <%= link_to "View Orders", admin_orders_path, class: "btn-primary" %>
+  </div>
+</div>
+
+<div class="grid gap-4 md:grid-cols-3">
+  <article class="admin-card p-5">
+    <p class="admin-label">Orders Today</p>
+    <p class="mt-2 text-4xl font-black text-neutral-950"><%= @orders_today %></p>
+    <p class="mt-2 text-sm text-neutral-500">Pickup and delivery requests created today.</p>
+  </article>
+  <article class="admin-card p-5">
+    <p class="admin-label">Bookings Today</p>
+    <p class="mt-2 text-4xl font-black text-neutral-950"><%= @bookings_today %></p>
+    <p class="mt-2 text-sm text-neutral-500">Reservations scheduled for today.</p>
+  </article>
+  <article class="admin-card p-5">
+    <p class="admin-label">Needs Attention</p>
+    <p class="mt-2 text-4xl font-black text-[#b34834]"><%= @pending_orders.count %></p>
+    <p class="mt-2 text-sm text-neutral-500">Orders still new, confirmed, or in kitchen.</p>
+  </article>
+</div>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <section class="admin-card p-5">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <p class="admin-label">Kitchen Flow</p>
+        <h2 class="text-2xl text-neutral-950">Recent Orders</h2>
+      </div>
+      <%= link_to "All orders", admin_orders_path, class: "admin-action" %>
+    </div>
+    <div class="mt-4 space-y-3">
+      <% if @pending_orders.any? %>
+        <% @pending_orders.each do |order| %>
+          <%= link_to admin_order_path(order), class: "block rounded-lg border border-[#e6ded0] bg-[#fffdf7] p-4 hover:border-[#c98b17]" do %>
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="font-black text-neutral-950"><%= order.public_id %> - <%= order.customer_name %></p>
+                <p class="mt-1 text-xs text-neutral-500"><%= order.created_at.strftime("%d %b %I:%M %p") %> - <%= money(order.total_cents) %></p>
+              </div>
+              <%= order_status_badge(order.status) %>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="admin-muted-panel">No active orders need attention right now.</div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="admin-card p-5">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <p class="admin-label">Dining Room</p>
+        <h2 class="text-2xl text-neutral-950">Recent Bookings</h2>
+      </div>
+      <%= link_to "All bookings", admin_bookings_path, class: "admin-action" %>
+    </div>
+    <div class="mt-4 space-y-3">
+      <% if @pending_bookings.any? %>
+        <% @pending_bookings.each do |booking| %>
+          <%= link_to admin_booking_path(booking), class: "block rounded-lg border border-[#e6ded0] bg-[#fffdf7] p-4 hover:border-[#c98b17]" do %>
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="font-black text-neutral-950"><%= booking.name %> - <%= booking.party_size %> pax</p>
+                <p class="mt-1 text-xs text-neutral-500"><%= booking.booking_time.strftime("%d %b %I:%M %p") %></p>
+              </div>
+              <%= booking_status_badge(booking.status) %>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="admin-muted-panel">No upcoming bookings need action.</div>
+      <% end %>
+    </div>
+  </section>
+</div>

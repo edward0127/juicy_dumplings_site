@@ -1,0 +1,42 @@
+<div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+  <div>
+    <p class="eyebrow">Trading Hours</p>
+    <h1 class="text-4xl text-neutral-950">Opening Hours</h1>
+    <p class="mt-2 text-sm text-neutral-600">These hours drive booking slots, pickup times, and public information.</p>
+  </div>
+  <%= link_to "Add Day", new_admin_opening_hour_path, class: "btn-primary self-start md:self-auto" %>
+</div>
+
+<div class="admin-card overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Open</th>
+        <th>Close</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @opening_hours.each do |hour| %>
+        <tr>
+          <td class="font-black text-neutral-950"><%= hour.day_name %></td>
+          <td><%= hour.opens_at %></td>
+          <td><%= hour.closes_at %></td>
+          <td>
+            <% if hour.closed? %>
+              <span class="rounded-full bg-neutral-100 px-3 py-1 text-xs font-black text-neutral-600">Closed</span>
+            <% else %>
+              <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-700">Open</span>
+            <% end %>
+          </td>
+          <td class="text-right">
+            <%= link_to "Edit", edit_admin_opening_hour_path(hour), class: "admin-action" %>
+            <%= button_to "Delete", admin_opening_hour_path(hour), method: :delete, class: "ml-3 text-sm font-black text-rose-600", form: { data: { turbo_confirm: "Delete this day?" }, class: "inline" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

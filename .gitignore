@@ -1,0 +1,45 @@
+# Bundler
+/.bundle
+/.bundle_home
+/vendor/bundle
+
+# Environment files
+/.env
+/.env.prod
+/.env*.local
+/.env.*
+!.env.example
+!.env.prod.example
+
+# Rails credentials
+/config/master.key
+/config/credentials/*.key
+
+# Logs and temp files
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# PID files
+/tmp/pids
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Storage/db/runtime
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
+/*.sqlite3
+/*.sqlite3-*
+/db/*.sqlite3
+/db/*.sqlite3-*
+/storage/*.sqlite3
+/storage/*.sqlite3-*
+
+# Node / asset artifacts
+/public/assets
+/node_modules
+/app/assets/builds/*
+!/app/assets/builds/.keep

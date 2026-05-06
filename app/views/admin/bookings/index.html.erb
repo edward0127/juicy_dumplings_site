@@ -1,0 +1,33 @@
+<div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+  <div>
+    <p class="eyebrow">Dining Room</p>
+    <h1 class="text-4xl text-neutral-950">Bookings</h1>
+    <p class="mt-2 text-sm text-neutral-600">Review guest details, party sizes, and reservation status.</p>
+  </div>
+  <%= link_to "Export CSV", export_admin_bookings_path(format: :csv), class: "btn-secondary self-start md:self-auto" %>
+</div>
+
+<div class="admin-card overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Name</th>
+        <th>Party</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @bookings.each do |booking| %>
+        <tr>
+          <td class="font-semibold"><%= booking.booking_time.strftime("%d %b %I:%M %p") %></td>
+          <td class="font-black text-neutral-950"><%= booking.name %></td>
+          <td><%= booking.party_size %> guests</td>
+          <td><%= booking_status_badge(booking.status) %></td>
+          <td class="text-right"><%= link_to "View", admin_booking_path(booking), class: "admin-action" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

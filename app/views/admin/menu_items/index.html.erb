@@ -1,0 +1,52 @@
+<div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+  <div>
+    <p class="eyebrow">Menu Management</p>
+    <h1 class="text-4xl text-neutral-950">Menu Items</h1>
+    <p class="mt-2 text-sm text-neutral-600">Manage dish names, pricing, categories, photos, and ordering visibility.</p>
+  </div>
+  <%= link_to "New Item", new_admin_menu_item_path, class: "btn-primary self-start md:self-auto" %>
+</div>
+
+<div class="admin-card overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Tags</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @menu_items.each do |item| %>
+        <tr>
+          <td>
+            <div class="flex min-w-[260px] items-center gap-3">
+              <%= menu_item_photo_tag(item, classes: "h-16 w-16 flex-none rounded-lg object-cover", alt: item.name) %>
+              <div>
+                <p class="font-black text-neutral-950"><%= item.name %></p>
+                <p class="mt-1 text-xs leading-5 text-neutral-500"><%= truncate(item.description, length: 76) %></p>
+              </div>
+            </div>
+          </td>
+          <td class="text-neutral-700"><%= item.category.name %></td>
+          <td class="font-black text-[#b34834]"><%= money(item.price_cents) %></td>
+          <td class="text-xs text-neutral-600"><%= item.dietary_tags.presence&.join(", ") || "None" %></td>
+          <td>
+            <% if item.active? %>
+              <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-700">Active</span>
+            <% else %>
+              <span class="rounded-full bg-neutral-100 px-3 py-1 text-xs font-black text-neutral-600">Hidden</span>
+            <% end %>
+          </td>
+          <td class="text-right">
+            <%= link_to "Edit", edit_admin_menu_item_path(item), class: "admin-action" %>
+            <%= button_to "Delete", admin_menu_item_path(item), method: :delete, class: "ml-3 text-sm font-black text-rose-600", form: { data: { turbo_confirm: "Delete menu item?" }, class: "inline" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

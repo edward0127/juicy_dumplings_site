@@ -1,0 +1,40 @@
+<section class="container-shell">
+  <div class="section-card p-6 md:p-8">
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Order Received</p>
+    <h1 class="mt-2 text-4xl">Thanks, <%= @order.customer_name %>.</h1>
+    <p class="mt-2 text-sm text-neutral-600">Your order reference is <span class="font-semibold"><%= @order.public_id %></span>.</p>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <div class="rounded-2xl border border-neutral-200 bg-white p-4">
+        <p class="text-xs uppercase tracking-wide text-neutral-500">Order Details</p>
+        <p class="mt-2 text-sm"><span class="font-semibold">Type:</span> <%= @order.order_type.humanize %></p>
+        <p class="text-sm"><span class="font-semibold">Pickup Time:</span> <%= @order.pickup_time&.strftime("%a %d %b, %I:%M %p") || "TBC" %></p>
+        <p class="text-sm"><span class="font-semibold">Status:</span> <%= @order.status.humanize %></p>
+        <p class="text-sm"><span class="font-semibold">Payment:</span> <%= @order.paid? ? "Paid" : "Pay at pickup" %></p>
+      </div>
+
+      <div class="rounded-2xl border border-neutral-200 bg-white p-4">
+        <p class="text-xs uppercase tracking-wide text-neutral-500">Contact</p>
+        <p class="mt-2 text-sm"><%= @order.customer_phone.presence || @order.customer_email %></p>
+        <p class="mt-2 text-sm"><span class="font-semibold">Total:</span> <%= money(@order.total_cents) %></p>
+      </div>
+    </div>
+
+    <div class="mt-6 rounded-2xl border border-neutral-200 bg-white p-4">
+      <p class="mb-2 text-xs uppercase tracking-wide text-neutral-500">Items</p>
+      <ul class="space-y-2 text-sm">
+        <% @order.order_items.each do |item| %>
+          <li class="flex items-center justify-between gap-3">
+            <span><%= item.quantity %> x <%= item.menu_item.name %></span>
+            <span class="font-semibold"><%= money(item.total_cents) %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <%= link_to "Back to Home", root_path, class: "btn-secondary" %>
+      <%= link_to "Place Another Order", order_path, class: "btn-primary" %>
+    </div>
+  </div>
+</section>

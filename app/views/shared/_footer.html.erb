@@ -1,0 +1,33 @@
+<footer class="border-t border-black/10 bg-[#24211f] py-12 text-[#f7ead3]">
+  <div class="container-shell grid gap-8 md:grid-cols-[1.3fr_1fr_1fr_0.8fr]">
+    <div>
+      <div class="flex items-center gap-3">
+        <span class="brand-mark">JD</span>
+        <div>
+          <p class="text-lg font-extrabold text-white"><%= business_setting.business_name %></p>
+          <p class="text-xs font-semibold text-[#f4c84a]">Handmade dumplings, local warmth.</p>
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-[#dccbb0]"><%= full_business_address %></p>
+    </div>
+    <div>
+      <p class="text-sm font-extrabold uppercase tracking-wide text-[#f4c84a]">Contact</p>
+      <p class="mt-2 text-sm">Phone: <%= business_setting.phone.presence || "Update in Admin" %></p>
+      <p class="text-sm">Email: <%= business_setting.email.presence || "Update in Admin" %></p>
+    </div>
+    <div>
+      <p class="text-sm font-extrabold uppercase tracking-wide text-[#f4c84a]">Opening Hours</p>
+      <% opening_hours_lines.each do |line| %>
+        <p class="mt-1 text-sm"><%= line %></p>
+      <% end %>
+    </div>
+    <div>
+      <p class="text-sm font-extrabold uppercase tracking-wide text-[#f4c84a]">Quick Links</p>
+      <div class="mt-2 flex flex-col gap-2 text-sm">
+        <%= link_to "Privacy", privacy_path, class: "hover:text-white" %>
+        <%= link_to "Terms", terms_path, class: "hover:text-white" %>
+        <%= link_to "Admin", admin_root_path, class: "hover:text-white" %>
+      </div>
+    </div>
+  </div>
+</footer>

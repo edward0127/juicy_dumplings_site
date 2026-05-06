@@ -1,0 +1,162 @@
+<section class="warm-band">
+  <div class="container-shell py-10">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="eyebrow">Online Ordering</p>
+        <h1 class="mt-2 text-5xl leading-tight text-neutral-950 md:text-6xl">Build your dumpling order.</h1>
+        <p class="mt-3 max-w-2xl text-base leading-7 text-neutral-700">Pick dishes from the in-store menu, choose a pickup time, and pay at pickup unless online payment is enabled.</p>
+      </div>
+      <%= link_to "Need a table?", book_path, class: "btn-secondary self-start md:self-auto" %>
+    </div>
+  </div>
+</section>
+
+<section class="container-shell py-10">
+  <div class="grid gap-6 lg:grid-cols-[1.55fr_0.9fr]">
+    <div class="space-y-8">
+      <% @categories.each do |category| %>
+        <% items = category.menu_items.select(&:active?) %>
+        <% next if items.empty? %>
+
+        <section class="section-card p-4 md:p-6">
+          <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p class="eyebrow"><%= items.count %> choices</p>
+              <h2 class="mt-1 text-3xl text-neutral-950"><%= category.name %></h2>
+              <% if menu_category_blurb(category.name).present? %>
+                <p class="mt-1 text-sm text-neutral-600"><%= menu_category_blurb(category.name) %></p>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <% items.each do |item| %>
+              <article id="item-<%= item.id %>" class="rounded-lg border border-[#e6d7bd] bg-[#fffdf7] p-3">
+                <div class="grid gap-4 sm:grid-cols-[96px_1fr_auto] sm:items-start">
+                  <%= menu_item_photo_tag(item, classes: "h-24 w-24 rounded-lg object-cover", alt: item.name) %>
+                  <div>
+                    <div class="flex flex-wrap items-start justify-between gap-2">
+                      <h3 class="text-2xl leading-tight text-neutral-950"><%= item.name %></h3>
+                      <p class="rounded-full bg-[#fff2d6] px-3 py-1 text-sm font-black text-[#b34834] sm:hidden"><%= money(item.price_cents) %></p>
+                    </div>
+                    <p class="mt-2 text-sm leading-6 text-neutral-600"><%= truncate(item.description, length: 140) %></p>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                      <% item.dietary_tags.each do |tag| %>
+                        <span class="chip"><%= tag %></span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-3 sm:block sm:text-right">
+                    <p class="hidden text-lg font-black text-[#b34834] sm:block"><%= money(item.price_cents) %></p>
+                    <%= button_to "Add", cart_item_add_path(item), method: :post, class: "mt-0 rounded-full bg-neutral-950 px-5 py-2 text-sm font-black text-white hover:bg-neutral-800 sm:mt-3" %>
+                  </div>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+    </div>
+
+    <aside class="space-y-4 lg:sticky lg:top-24 lg:self-start">
+      <div id="cart_drawer">
+        <%= render "orders/cart_drawer", cart: cart, business_setting: business_setting %>
+      </div>
+
+      <div class="section-card p-4 md:p-5">
+        <p class="eyebrow">Checkout</p>
+        <h2 class="mt-1 text-3xl text-neutral-950">Pickup details</h2>
+
+        <%= form_with url: order_path, method: :get, class: "mt-4" do |picker| %>
+          <%= picker.label :pickup_date, "Pickup Date", class: "form-label" %>
+          <%= picker.date_field :pickup_date, value: @selected_pickup_date, class: "input-field", onchange: "this.form.requestSubmit()" %>
+        <% end %>
+
+        <% if @order.errors.any? %>
+          <div class="mt-4 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+            <p class="font-black">Please fix the following:</p>
+            <ul class="mt-2 list-disc pl-5">
+              <% @order.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <%= form_with model: @order, url: order_path, class: "mt-5 space-y-4" do |f| %>
+          <div>
+            <%= f.label :customer_name, "Name", class: "form-label" %>
+            <%= f.text_field :customer_name, class: "input-field", required: true %>
+          </div>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <%= f.label :customer_phone, "Phone", class: "form-label" %>
+              <%= f.telephone_field :customer_phone, class: "input-field" %>
+            </div>
+            <div>
+              <%= f.label :customer_email, "Email", class: "form-label" %>
+              <%= f.email_field :customer_email, class: "input-field" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.label :order_type, "Order Type", class: "form-label" %>
+            <%= f.select :order_type, [["Pickup", "pickup"], ["Delivery Request", "delivery_request"]], {}, class: "input-field" %>
+          </div>
+
+          <div>
+            <%= f.label :pickup_time, "Pickup Time", class: "form-label" %>
+            <%= f.select :pickup_time, @available_pickup_slots.map { |slot| [slot.strftime("%a %d %b, %I:%M %p"), slot] }, { include_blank: "Select a time" }, class: "input-field" %>
+          </div>
+
+          <div>
+            <%= f.label :delivery_address, "Delivery Address", class: "form-label" %>
+            <%= f.text_field :delivery_address, class: "input-field", placeholder: "Only required for delivery requests" %>
+          </div>
+
+          <div>
+            <%= f.label :notes, "Order Notes", class: "form-label" %>
+            <%= f.text_area :notes, rows: 3, class: "input-field", placeholder: "Allergies, requests, pickup notes" %>
+          </div>
+
+          <div class="rounded-lg border border-[#e6d7bd] bg-[#fff8ec] p-4 text-sm">
+            <p class="font-black text-neutral-950">Payment</p>
+            <% if business_setting.pay_at_pickup_enabled? %>
+              <label class="mt-3 flex items-center gap-2">
+                <%= f.radio_button :payment_method, "pay_at_pickup", checked: true %>
+                <span>Pay at pickup</span>
+              </label>
+              <label class="mt-2 flex items-center gap-2">
+                <%= f.radio_button :payment_method, "pay_now" %>
+                <span>Pay now with Stripe Checkout</span>
+              </label>
+            <% else %>
+              <%= f.hidden_field :payment_method, value: "pay_now" %>
+              <p class="mt-2 text-neutral-600">Online pre-payment is required for orders.</p>
+            <% end %>
+          </div>
+
+          <%= f.submit "Place Order", class: "btn-primary w-full justify-center" %>
+        <% end %>
+      </div>
+
+      <div class="section-card p-4" data-controller="accordion">
+        <h3 class="text-2xl text-neutral-950">Ordering FAQ</h3>
+        <% faqs = [
+          ["How far ahead can I order?", "Orders can be placed for any available timeslot shown above."],
+          ["Can I request delivery?", "Yes. Choose delivery request and include your address."],
+          ["Can I add dietary notes?", "Yes. Add allergies or preparation requests in order notes."]
+        ] %>
+        <div class="mt-3 space-y-2">
+          <% faqs.each_with_index do |(question, answer), index| %>
+            <button type="button" data-index="<%= index %>" data-action="accordion#toggle" class="flex w-full items-center justify-between rounded-lg border border-[#e6d7bd] bg-white px-3 py-2 text-left text-sm font-black">
+              <span><%= question %></span>
+              <span>+</span>
+            </button>
+            <div data-accordion-target="panel" data-index="<%= index %>" class="hidden rounded-lg bg-[#fff8ec] px-3 py-2 text-sm text-neutral-600"><%= answer %></div>
+          <% end %>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

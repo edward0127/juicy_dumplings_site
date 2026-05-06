@@ -1,0 +1,6 @@
+<% flash.each do |key, value| %>
+  <% tone = key.to_s == "alert" ? "bg-rose-100 text-rose-700 border-rose-200" : "bg-emerald-100 text-emerald-700 border-emerald-200" %>
+  <div class="container-shell mt-4">
+    <div class="rounded-lg border px-4 py-3 text-sm font-semibold <%= tone %>"><%= value %></div>
+  </div>
+<% end %>

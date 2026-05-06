@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin | <%= business_setting.business_name %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="admin-shell min-h-screen text-neutral-900">
+    <header class="border-b border-black/10 bg-[#24211f] text-white">
+      <div class="container-shell flex flex-wrap items-center justify-between gap-4 py-4">
+        <div class="flex items-center gap-3">
+          <span class="brand-mark">JD</span>
+          <div>
+            <p class="text-lg font-black">Restaurant Admin</p>
+            <p class="text-xs font-semibold text-[#f4c84a]"><%= business_setting.business_name %> operations</p>
+          </div>
+        </div>
+        <nav class="flex flex-wrap items-center gap-2 text-sm">
+          <%= link_to "Dashboard", admin_root_path, class: admin_nav_link_classes(admin_root_path) %>
+          <%= link_to "Orders", admin_orders_path, class: admin_nav_link_classes(admin_orders_path) %>
+          <%= link_to "Bookings", admin_bookings_path, class: admin_nav_link_classes(admin_bookings_path) %>
+          <%= link_to "Menu Items", admin_menu_items_path, class: admin_nav_link_classes(admin_menu_items_path) %>
+          <%= link_to "Categories", admin_categories_path, class: admin_nav_link_classes(admin_categories_path) %>
+          <%= link_to "Hours", admin_opening_hours_path, class: admin_nav_link_classes(admin_opening_hours_path) %>
+          <%= link_to "Settings", edit_admin_settings_path, class: admin_nav_link_classes(edit_admin_settings_path) %>
+          <%= link_to "View Site", root_path, class: "rounded-full bg-white px-3 py-2 text-sm font-extrabold text-neutral-950 transition hover:bg-[#f4c84a]" %>
+        </nav>
+      </div>
+    </header>
+
+    <%= render "shared/flash" %>
+
+    <main class="container-shell py-8">
+      <%= yield %>
+    </main>
+  </body>
+</html>

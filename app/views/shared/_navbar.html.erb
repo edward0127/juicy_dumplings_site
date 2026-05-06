@@ -1,0 +1,35 @@
+<header class="sticky top-0 z-40 border-b border-[#e6d7bd] bg-[#fff8ec]/95 backdrop-blur">
+  <div class="container-shell flex items-center justify-between gap-3 py-3">
+    <%= link_to root_path, class: "flex items-center gap-3" do %>
+      <span class="brand-mark">JD</span>
+      <div>
+        <p class="text-sm font-extrabold leading-tight text-neutral-950"><%= business_setting.business_name %></p>
+        <p class="text-xs font-semibold text-neutral-600">Wuxi-style dumplings in <%= business_setting.suburb.to_s.split(",").first %></p>
+      </div>
+    <% end %>
+
+    <nav class="hidden items-center gap-1 md:flex">
+      <%= link_to "Home", root_path, class: nav_link_classes(root_path) %>
+      <%= link_to "Menu", menu_path, class: nav_link_classes(menu_path) %>
+      <%= link_to "Order", order_path, class: nav_link_classes(order_path) %>
+      <%= link_to "Book", book_path, class: nav_link_classes(book_path) %>
+      <%= link_to "About", about_path, class: nav_link_classes(about_path) %>
+      <%= link_to "Contact", contact_path, class: nav_link_classes(contact_path) %>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <%= link_to "Order Now", order_path, class: "btn-primary hidden md:inline-flex" %>
+      <%= link_to "Book", book_path, class: "btn-secondary hidden md:inline-flex" %>
+      <%= render "shared/cart_badge", cart: cart %>
+    </div>
+  </div>
+
+  <div class="container-shell flex gap-2 overflow-x-auto pb-3 md:hidden">
+    <%= link_to "Home", root_path, class: "chip whitespace-nowrap" %>
+    <%= link_to "Menu", menu_path, class: "chip whitespace-nowrap" %>
+    <%= link_to "Order", order_path, class: "chip whitespace-nowrap" %>
+    <%= link_to "Book", book_path, class: "chip whitespace-nowrap" %>
+    <%= link_to "About", about_path, class: "chip whitespace-nowrap" %>
+    <%= link_to "Contact", contact_path, class: "chip whitespace-nowrap" %>
+  </div>
+</header>
