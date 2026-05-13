@@ -7,13 +7,26 @@ module ApplicationHelper
     alt_text = alt.presence || item&.name || business_setting.business_name
 
     if item&.photo&.attached?
-      image_tag(item.photo, alt: alt_text, class: classes, loading: "lazy", decoding: "async")
+      image_tag(active_storage_public_url(item.photo), alt: alt_text, class: classes, loading: "lazy", decoding: "async")
     elsif item&.image_url.present?
       image_tag(item.image_url, alt: alt_text, class: classes, loading: "lazy", decoding: "async")
     else
       content_tag(:div, class: "#{classes} flex items-center justify-center bg-[#fff2d6]") do
         content_tag(:span, "JD", class: "brand-mark")
       end
+    end
+  end
+
+  def active_storage_public_url(attachment)
+    return nil unless attachment&.attached?
+
+    blob = attachment.blob
+    asset_host = ENV["PUBLIC_UPLOAD_ASSET_HOST"].to_s.strip.chomp("/")
+
+    if asset_host.present? && blob.service_name.to_s == "amazon"
+      "#{asset_host}/#{blob.key}"
+    else
+      url_for(attachment)
     end
   end
 
