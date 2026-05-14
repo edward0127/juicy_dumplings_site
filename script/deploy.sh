@@ -161,10 +161,27 @@ healthcheck() {
 
   echo "== healthcheck =="
   echo "GET/HEAD: $HEALTHCHECK_URL"
-  # HEAD request first; fall back to GET if needed
+
   if command -v curl >/dev/null 2>&1; then
-    curl -fsS -I "$HEALTHCHECK_URL" >/dev/null || curl -fsS "$HEALTHCHECK_URL" >/dev/null
-    echo "OK: healthcheck passed."
+    local max_attempts=20
+    local sleep_seconds=3
+    local attempt
+
+    for attempt in $(seq 1 "$max_attempts"); do
+      # HEAD request first; fall back to GET if needed.
+      if curl -fsS -I "$HEALTHCHECK_URL" >/dev/null || curl -fsS "$HEALTHCHECK_URL" >/dev/null; then
+        echo "OK: healthcheck passed after $attempt attempt(s)."
+        return 0
+      fi
+
+      if [[ "$attempt" -lt "$max_attempts" ]]; then
+        echo "Waiting for healthcheck attempt $((attempt + 1))/$max_attempts..."
+        sleep "$sleep_seconds"
+      fi
+    done
+
+    echo "ERROR: healthcheck failed after $max_attempts attempts."
+    return 1
   else
     echo "WARN: curl not installed, skipping healthcheck."
   fi
