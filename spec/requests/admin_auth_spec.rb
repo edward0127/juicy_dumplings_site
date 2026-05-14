@@ -11,19 +11,53 @@ RSpec.describe "Admin authentication", type: :request do
     ENV.delete("ADMIN_PASS")
   end
 
-  it "requires basic auth for admin routes" do
+  it "redirects unauthenticated admin requests to the login page" do
     get admin_root_path
 
-    expect(response).to have_http_status(:unauthorized)
+    expect(response).to redirect_to(admin_login_path)
+    expect(flash[:alert]).to eq("Please sign in to continue.")
   end
 
-  it "allows authenticated access" do
-    get admin_root_path, headers: { "HTTP_AUTHORIZATION" => basic_auth("admin_test", "secret_test") }
+  it "loads the login page" do
+    get admin_login_path
 
     expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Sign in to manage the restaurant")
+    expect(response.body).to include("Password")
   end
 
-  def basic_auth(user, pass)
-    ActionController::HttpAuthentication::Basic.encode_credentials(user, pass)
+  it "signs in with valid credentials and returns to the requested admin page" do
+    get admin_orders_path
+
+    post admin_login_path, params: { username: "admin_test", password: "secret_test" }
+
+    expect(response).to redirect_to(admin_orders_path)
+
+    follow_redirect!
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Orders")
+    expect(response.body).to include("Log out")
+  end
+
+  it "rejects invalid credentials" do
+    post admin_login_path, params: { username: "admin_test", password: "wrong" }
+
+    expect(response).to have_http_status(:unauthorized)
+    expect(response.body).to include("Username or password is incorrect.")
+  end
+
+  it "logs out and requires login before accessing admin again" do
+    post admin_login_path, params: { username: "admin_test", password: "secret_test" }
+
+    delete admin_logout_path
+
+    expect(response).to redirect_to(admin_login_path)
+
+    follow_redirect!
+    expect(response.body).to include("Signed out.")
+
+    get admin_root_path
+
+    expect(response).to redirect_to(admin_login_path)
   end
 end

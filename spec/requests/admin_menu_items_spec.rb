@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "Admin menu items", type: :request do
-  let(:auth_header) { { "HTTP_AUTHORIZATION" => ActionController::HttpAuthentication::Basic.encode_credentials("admin_test", "secret_test") } }
   let!(:category) { Category.create!(name: "Dumplings", position: 1, active: true) }
 
   before do
     ENV["ADMIN_USER"] = "admin_test"
     ENV["ADMIN_PASS"] = "secret_test"
+    sign_in_admin
   end
 
   after do
@@ -31,8 +31,7 @@ RSpec.describe "Admin menu items", type: :request do
           position: 1,
           photo: uploaded_photo
         }
-      },
-      headers: auth_header
+      }
 
     menu_item = MenuItem.find_by!(name: "Photo Test Dumpling")
     expect(response).to redirect_to(admin_menu_items_path)
@@ -59,10 +58,13 @@ RSpec.describe "Admin menu items", type: :request do
           position: menu_item.position,
           remove_photo: "1"
         }
-      },
-      headers: auth_header
+      }
 
     expect(response).to redirect_to(admin_menu_items_path)
     expect(menu_item.reload.photo).not_to be_attached
+  end
+
+  def sign_in_admin
+    post admin_login_path, params: { username: "admin_test", password: "secret_test" }
   end
 end

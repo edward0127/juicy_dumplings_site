@@ -193,6 +193,30 @@
     border-color: #e6ded0;
   }
 
+  .admin-mobile-list {
+    @apply space-y-3;
+  }
+
+  .admin-mobile-card {
+    @apply rounded-lg border bg-white p-4;
+    border-color: #e6ded0;
+    box-shadow: 0 10px 24px rgba(36, 33, 31, 0.05);
+  }
+
+  .admin-mobile-label {
+    @apply text-[0.68rem] font-extrabold uppercase text-neutral-500;
+    letter-spacing: 0.1em;
+  }
+
+  .admin-mobile-value {
+    @apply mt-1 text-sm font-bold text-neutral-900;
+  }
+
+  .admin-mobile-actions {
+    @apply mt-4 flex flex-wrap items-center gap-3 border-t pt-3;
+    border-color: #eee5d8;
+  }
+
   .admin-tour {
     @apply fixed inset-0 z-50 flex items-center justify-center px-4 py-6;
   }

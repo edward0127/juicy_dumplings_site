@@ -49,6 +49,7 @@
             Show guide
           </button>
           <%= link_to "View Site", root_path, class: "rounded-full bg-white px-3 py-2 text-sm font-extrabold text-neutral-950 transition hover:bg-[#f4c84a]" %>
+          <%= button_to "Log out", admin_logout_path, method: :delete, form: { class: "inline" }, class: "rounded-full border border-white/25 px-3 py-2 text-sm font-extrabold text-white transition hover:border-[#f4c84a] hover:text-[#f4c84a]" %>
         </nav>
       </div>
     </header>

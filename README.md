@@ -34,9 +34,10 @@ Public:
 - `/privacy`
 - `/terms`
 
-Admin (HTTP Basic auth):
+Admin (session login with `ADMIN_USER` / `ADMIN_PASS`):
 
 - `/admin`
+- `/admin/login`
 
 ## Local Setup
 

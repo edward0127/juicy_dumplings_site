@@ -1,11 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Admin tour", type: :request do
-  let(:auth_header) { { "HTTP_AUTHORIZATION" => ActionController::HttpAuthentication::Basic.encode_credentials("admin_test", "secret_test") } }
-
   before do
     ENV["ADMIN_USER"] = "admin_test"
     ENV["ADMIN_PASS"] = "secret_test"
+    sign_in_admin
   end
 
   after do
@@ -14,7 +13,7 @@ RSpec.describe "Admin tour", type: :request do
   end
 
   it "renders the dashboard with the first-time tour shell" do
-    get admin_root_path, headers: auth_header
+    get admin_root_path
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('data-controller="admin-tour"')
@@ -36,10 +35,14 @@ RSpec.describe "Admin tour", type: :request do
     }
 
     page_contexts.each do |path, page|
-      get path, headers: auth_header
+      get path
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(%(data-admin-tour-page-value="#{page}"))
     end
+  end
+
+  def sign_in_admin
+    post admin_login_path, params: { username: "admin_test", password: "secret_test" }
   end
 end

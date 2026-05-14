@@ -7,7 +7,45 @@
   <%= link_to "Export CSV", export_admin_orders_path(format: :csv), class: "btn-secondary self-start md:self-auto" %>
 </div>
 
-<div class="admin-card overflow-x-auto">
+<div class="admin-mobile-list space-y-3 md:hidden">
+  <% @orders.each do |order| %>
+    <article class="admin-mobile-card">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <p class="admin-mobile-label">Order</p>
+          <h2 class="mt-1 truncate text-lg font-black text-neutral-950"><%= order.public_id %> - <%= order.customer_name %></h2>
+          <p class="mt-1 text-xs font-bold text-neutral-500"><%= order.created_at.strftime("%d %b %I:%M %p") %></p>
+        </div>
+        <%= order_status_badge(order.status) %>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <div>
+          <p class="admin-mobile-label">Type</p>
+          <p class="admin-mobile-value"><%= order.order_type.humanize %></p>
+        </div>
+        <div>
+          <p class="admin-mobile-label">Total</p>
+          <p class="admin-mobile-value text-[#b34834]"><%= money(order.total_cents) %></p>
+        </div>
+        <div>
+          <p class="admin-mobile-label">Pickup</p>
+          <p class="admin-mobile-value"><%= order.pickup_time&.strftime("%d %b %I:%M %p") || "Not set" %></p>
+        </div>
+        <div>
+          <p class="admin-mobile-label">Contact</p>
+          <p class="admin-mobile-value break-words"><%= order.customer_phone.presence || order.customer_email.presence || "Not provided" %></p>
+        </div>
+      </div>
+
+      <div class="admin-mobile-actions">
+        <%= link_to "View order", admin_order_path(order), class: "btn-secondary min-h-11 w-full justify-center px-4 py-2" %>
+      </div>
+    </article>
+  <% end %>
+</div>
+
+<div class="admin-card hidden overflow-x-auto md:block">
   <table class="admin-table">
     <thead>
       <tr>

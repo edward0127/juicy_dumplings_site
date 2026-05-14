@@ -1,11 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Admin CSV exports", type: :request do
-  let(:auth_header) { { "HTTP_AUTHORIZATION" => ActionController::HttpAuthentication::Basic.encode_credentials("admin_test", "secret_test") } }
-
   before do
     ENV["ADMIN_USER"] = "admin_test"
     ENV["ADMIN_PASS"] = "secret_test"
+    sign_in_admin
 
     BusinessSetting.current.update!(slot_interval_minutes: 30, max_bookings_per_slot: 8)
 
@@ -33,7 +32,7 @@ RSpec.describe "Admin CSV exports", type: :request do
   end
 
   it "exports orders CSV" do
-    get export_admin_orders_path(format: :csv), headers: auth_header
+    get export_admin_orders_path(format: :csv)
 
     expect(response).to have_http_status(:ok)
     expect(response.content_type).to include("text/csv")
@@ -41,10 +40,14 @@ RSpec.describe "Admin CSV exports", type: :request do
   end
 
   it "exports bookings CSV" do
-    get export_admin_bookings_path(format: :csv), headers: auth_header
+    get export_admin_bookings_path(format: :csv)
 
     expect(response).to have_http_status(:ok)
     expect(response.content_type).to include("text/csv")
     expect(response.body).to include("party_size")
+  end
+
+  def sign_in_admin
+    post admin_login_path, params: { username: "admin_test", password: "secret_test" }
   end
 end
