@@ -192,4 +192,42 @@
     background: #fbf7ef;
     border-color: #e6ded0;
   }
+
+  .admin-tour {
+    @apply fixed inset-0 z-50 flex items-center justify-center px-4 py-6;
+  }
+
+  .admin-tour__backdrop {
+    @apply absolute inset-0 bg-neutral-950/60;
+  }
+
+  .admin-tour__panel {
+    @apply relative w-full max-w-xl overflow-y-auto rounded-lg border p-5 text-left sm:p-6;
+    max-height: min(92vh, 640px);
+    background: #fffdf7;
+    border-color: #e6ded0;
+    box-shadow: 0 28px 80px rgba(23, 21, 20, 0.28);
+  }
+
+  .admin-tour__icon-button {
+    @apply inline-flex h-10 w-10 flex-none items-center justify-center rounded-full border bg-white text-2xl leading-none text-neutral-600 hover:text-neutral-950;
+    border-color: #e6ded0;
+  }
+
+  .admin-tour__icon-button:hover {
+    border-color: var(--gold-deep);
+  }
+
+  .admin-tour__text-button {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-extrabold text-neutral-600 hover:text-neutral-950;
+  }
+
+  .admin-tour__dot {
+    @apply h-2.5 w-2.5 rounded-full;
+    background: #e6ded0;
+  }
+
+  .admin-tour__dot--active {
+    background: var(--gold-deep);
+  }
 }
